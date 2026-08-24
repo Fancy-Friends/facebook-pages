@@ -1,0 +1,82 @@
+{
+  "$comment": "THE hand-written part. Four packages -- ui, js, php, py -- are generated from this directory and are never edited. Meta publishes no machine-readable spec for the Graph API, so every fact here is read from its own reference documentation and probed against the live host where that was possible.",
+
+  "connectorApi": 1,
+
+  "service": "facebook_pages",
+  "title": "Facebook Pages",
+  "domain": "marketing",
+  "docs": "https://developers.facebook.com/docs/graph-api/reference/page/feed/",
+
+  "auth": "oauth2",
+  "requires": ["pageAccessToken", "appSecret", "clientId", "clientSecret"],
+
+  "authorize": {
+    "kind": "query",
+    "param": "access_token",
+    "credential": "pageAccessToken",
+    "$comment": "Meta takes the token as a QUERY PARAMETER rather than a bearer header. It accepts the header too, but the query form is what its own documentation and every error message use, and appsecret_proof has to go in the query regardless -- so putting both in one place keeps the request readable in a log.",
+    "proof": {
+      "param": "appsecret_proof",
+      "algorithm": "sha256",
+      "over": "pageAccessToken",
+      "keyCredential": "appSecret",
+      "encoding": "hex",
+      "$comment": "Quoted from Meta's own docs: appsecret_proof = hash_hmac('sha256', $access_token, $app_secret). An HMAC over the TOKEN, KEYED BY THE SECRET -- and the two are one swap apart, both are credentials, and both orders produce a plausible 64-character hex string. It is OPTIONAL until an app turns on App Settings -> Advanced -> Security -> Require App Secret, at which point every call without it fails. Omitting it would ship a connector correct only for the less secure configuration."
+    }
+  },
+
+  "oauth": {
+    "flow": "authorization_code",
+    "authorizeUrl": "https://www.facebook.com/v21.0/dialog/oauth",
+    "tokenUrl": "https://graph.facebook.com/v21.0/oauth/access_token",
+    "scopes": ["pages_manage_posts", "pages_read_engagement"],
+    "accessTokenCredential": "pageAccessToken",
+    "refreshTokenCredential": null,
+    "accessTokenTtlSeconds": 5184000,
+    "$scopeComment": "pages_manage_posts to publish and pages_read_engagement because Meta requires it alongside -- neither grants reading a user's own feed or their friends. Both are subject to App Review before an app can use them on a page it does not own.",
+    "$comment": "The PAGE token, not the user token. A user token is exchanged for a per-page token, which is why pageAccessToken is scoped `account` -- one per connected page -- while appSecret and the client pair are `provider`, one for the whole installation. Getting that backwards would let one page's automation post as another's. Long-lived page tokens last about 60 days, which is what accessTokenTtlSeconds records; there is no refresh token in this flow, so a connection is re-authorised rather than refreshed."
+  },
+
+  "sandbox": "none",
+  "$sandboxComment": "CHECKED. Meta has test apps and test users, but no test estate for a real Page: a post to a Page is a post, visible to whoever follows it. The faker is the only way to build against this without publishing.",
+  "sandboxNote": "Facebook has no sandbox for Pages. Anything this publishes appears on a real Page to real followers, and deleting it afterwards does not un-notify them. Point it at a Page you own and have muted before pointing it at anything else.",
+
+  "baseUrls": {
+    "live": "https://graph.facebook.com/v21.0"
+  },
+  "$baseUrlComment": "The API VERSION is a path segment, not a header. Meta supports each version for about two years and then removes it -- an unversioned call silently gets the oldest still-supported version, so pinning it here is the difference between a breaking change we choose and one we discover.",
+
+  "encoding": "json",
+
+  "credentialFields": [
+    {
+      "key": "clientId",
+      "label": "App ID",
+      "scope": "provider",
+      "secret": false,
+      "help": "From the Meta app dashboard. ONE value for the whole installation."
+    },
+    {
+      "key": "clientSecret",
+      "label": "App secret (OAuth)",
+      "scope": "provider",
+      "secret": true,
+      "help": "The same app's client secret, used to exchange the authorization code."
+    },
+    {
+      "key": "appSecret",
+      "label": "App secret (proof)",
+      "scope": "provider",
+      "secret": true,
+      "help": "Keys the appsecret_proof HMAC. It is never sent -- it proves the token rather than accompanying it. For a standard Meta app this is the same value as the OAuth client secret; it is declared separately because they are different ROLES, and an app that rotates one without the other should not silently break the other."
+    },
+    {
+      "key": "pageAccessToken",
+      "label": "Page access token",
+      "scope": "account",
+      "secret": true,
+      "help": "PER PAGE, not per user. Obtained by exchanging a user token for a page token; a long-lived one lasts about 60 days and is re-authorised rather than refreshed."
+    }
+  ]
+}

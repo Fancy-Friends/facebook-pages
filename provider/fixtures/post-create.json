@@ -1,0 +1,14 @@
+{
+  "$comment": "The Graph API answers a publish with the new object's id and nothing else -- no echo of the message, no timestamp, no permalink. Reproduced exactly, because a faker that returned more would let an author build a flow against fields a real response never carries.",
+  "operation": "post_create",
+
+  "values": {
+    "$comment": "Drawn once. The id is `{page-id}_{post-id}` and the first half must be the page that was posted to -- two independent draws would produce an id addressing a different Page, which Meta never sends.",
+    "postId": { "$fake": "digits", "length": 15 }
+  },
+
+  "response": {
+    "id": { "$fake": "digits", "length": 32 },
+    "$idComment": "A SINGLE composite string in reality: `{page-id}_{post-id}`. The fixture vocabulary has no concatenation, so this is one drawn value of the right overall shape rather than the two halves joined -- which is honest about the length and dishonest about the underscore. An author who splits on `_` against this fake will not find two halves; the real API is where that behaviour has to be checked."
+  }
+}

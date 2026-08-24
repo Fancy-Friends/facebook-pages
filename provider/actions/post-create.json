@@ -1,0 +1,62 @@
+{
+  "$comment": "POST /{page-id}/feed, read from Meta's Page Feed reference. Meta publishes no machine-readable spec for the Graph API, which is why this carries more prose than a Google provider: the documentation is the only source and it is prose.",
+  "operation": "post_create",
+  "kind": "post",
+  "title": "Facebook Page post",
+  "description": "Publish a post to a Facebook Page.",
+  "summary": "publish a post",
+  "docs": "https://developers.facebook.com/docs/graph-api/reference/page/feed/#publish",
+  "sideEffects": "unsafe-to-replay",
+
+  "$idempotencyComment": "The Graph API offers no idempotency key on this edge -- no header, no parameter. So it is honestly unsafe-to-replay with no way to make it safe: a retried durable run publishes a SECOND post to a real Page, and followers are notified twice. Deleting it afterwards does not un-notify them.",
+
+  "request": {
+    "method": "POST",
+    "path": "/{pageId}/feed",
+    "encoding": "json",
+    "$pathComment": "The Page id is a PATH SEGMENT. It is numeric and public -- it appears in the Page's own URL -- so unlike Telegram's token there is nothing sensitive about it being in a path a proxy logs."
+  },
+
+  "config": [
+    {
+      "type": "text",
+      "key": "pageId",
+      "label": "Page ID",
+      "required": true,
+      "description": "The numeric Page id. Find it under the Page's About section, or as the `id` on the /me/accounts response used to obtain the token.",
+      "send": { "in": "path", "as": "pageId", "value": "string" }
+    },
+    {
+      "type": "textarea",
+      "key": "message",
+      "label": "Message",
+      "required": true,
+      "description": "The post text. Required unless a link is given -- and this connector always sends one, so it is required here.",
+      "send": { "in": "body", "as": "message", "value": "string" }
+    },
+    {
+      "type": "text",
+      "key": "link",
+      "label": "Link",
+      "description": "A URL to attach. Facebook fetches and renders its own preview, so the title and image come from the page's OpenGraph tags rather than from anything sent here.",
+      "send": { "in": "body", "as": "link", "value": "string" }
+    },
+    {
+      "type": "switch",
+      "key": "published",
+      "label": "Publish immediately",
+      "default": true,
+      "description": "Turn this off to create the post UNPUBLISHED, visible only to Page admins. Useful for review before it goes out.",
+      "send": { "in": "body", "as": "published", "value": "boolean" }
+    }
+  ],
+
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "The post id, in the form `{page-id}_{post-id}`. Both halves are needed to address the post again -- the second half alone is not a valid id." }
+  ],
+
+  "contract": {
+    "sends": ["message", "link", "published"],
+    "reads": ["id"]
+  }
+}
