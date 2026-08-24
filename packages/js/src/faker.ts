@@ -25,8 +25,6 @@
 import type { ConnectorFaker, FakeRequest } from "@particle-academy/fancy-connector-core";
 
 function fakePostCreate({ config, fake }: FakeRequest): unknown {
-  const boundPostid = Array.from({ length: 15 }, () => fake.int(0, 9)).join("");
-
   return {
     "id": Array.from({ length: 32 }, () => fake.int(0, 9)).join(""),
   };

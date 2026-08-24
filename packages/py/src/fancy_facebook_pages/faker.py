@@ -25,8 +25,6 @@ from ._fake import FakeValues
 
 
 def _post_create(config: dict[str, Any], fake: FakeValues) -> Any:
-    bound_postid = "".join(str(fake.int(0, 9)) for _ in range(15))
-
     return {
         "id": "".join(str(fake.int(0, 9)) for _ in range(32)),
     }

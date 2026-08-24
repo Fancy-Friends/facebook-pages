@@ -31,7 +31,7 @@ it('post_create fakes the shape Facebook Pages publishes', function () {
     $faked = FacebookPagesFaker::respond('post_create', ['config' => $config, 'fake' => $fake]);
 
     expect($faked)->toBe([
-        'id' => '88156160920104173966308337598763',
+        'id' => '23645919006995188156160920104173',
     ]);
 });
 

@@ -31,7 +31,7 @@ test("post_create fakes the shape Facebook Pages publishes", () => {
   const faked = facebookPagesFaker("post_create", fakeRequest("facebook_pages", "post_create", config));
 
   assert.deepEqual(faked, {
-    "id": "88156160920104173966308337598763"
+    "id": "23645919006995188156160920104173"
   });
 });
 

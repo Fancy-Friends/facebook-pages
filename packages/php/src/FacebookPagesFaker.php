@@ -50,8 +50,6 @@ final class FacebookPagesFaker
     /** @param array<string,mixed> $config */
     private static function PostCreate(array $config, mixed $fake): array
     {
-        $boundPostid = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 15)));
-
         return [
         'id' => implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 32))),
     ];
