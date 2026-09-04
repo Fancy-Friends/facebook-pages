@@ -37,7 +37,7 @@ SERVICE = "facebook_pages"
 TITLE = "Facebook Pages"
 SANDBOX = "none"
 BASE_URLS = {
-    "live": "https://graph.facebook.com/v21.0",
+    "live": "https://graph.facebook.com/v25.0",
 }
 
 """Credential keys a remote call cannot proceed without."""

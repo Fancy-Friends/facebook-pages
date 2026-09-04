@@ -8,6 +8,56 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.4.0] — 2026-09-04
+
+### Changed
+
+- **Pinned to Graph API v25.0. v21.0 retires on 21 January 2027.**
+
+Meta supports each API version for about two years and then removes it. v21.0
+was released 2 October 2024 and is withdrawn on 21 January 2027; after that
+every call from this connector fails, and an UNVERSIONED call does not fall
+back to something sensible — it silently gets the oldest version Meta still
+supports, which is the same breaking change arriving without a decision.
+
+v25.0 rather than v26.0, which is newer and lives a few months longer.
+`facebook-lead-ads` and `instagram-business` already pin v25.0, and three Meta
+connectors on one version is worth more than the extra runway: a difference
+between them is exactly the kind nothing reports until one of them breaks
+alone. v25.0 retires 29 July 2028.
+
+**The version was in THREE places, not one** — the base URL, the OAuth
+authorize dialog and the token endpoint. The first is the one anybody thinks
+of; the other two are what a connection is created through, so missing them
+would have left new authorisations pointed at a retired version while every
+existing connection kept working.
+
+Checked against Meta's v22, v23, v24 and v25 changelogs before moving: none of
+them touches `POST /{page-id}/feed`, its `message` / `link` / `published`
+fields, page access tokens, `appsecret_proof`, or any scope this connector
+requests. The v25.0 deprecations are Insights metrics, the `metadata=1` query
+parameter, webhook mTLS certificates and Marketing API campaign creation —
+none of which this connector uses.
+
+### Fixed
+
+- **`pages_show_list` was missing from the requested OAuth scopes.**
+
+Meta's permissions reference lists it as a dependency of `pages_manage_posts`,
+alongside `pages_read_engagement` which was already there. It is also how a
+user token is exchanged for the PER-PAGE token this connector authorises with,
+so a grant without it cannot produce the credential the connector needs.
+
+Nothing here could have reported it. The scope list is metadata a HOST acts on
+when it builds the consent URL — the connector never reads it — so an omission
+fails during authorisation, on somebody else's machine, with an error about
+permissions rather than about this package. `facebook-lead-ads` already
+requested it; this one did not, and the two were never compared.
+
+No code changed. All four packages are re-released together because they share
+one version, and the ui package's config schema carries the scope list a host
+reads.
+
 ## [0.3.1] — 2026-08-24
 
 ### Fixed

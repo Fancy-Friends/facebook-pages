@@ -118,11 +118,12 @@ export const FACEBOOK_PAGES_CREDENTIALS = [
  */
 export const FACEBOOK_PAGES_OAUTH = {
   "flow": "authorization_code",
-  "authorizeUrl": "https://www.facebook.com/v21.0/dialog/oauth",
-  "tokenUrl": "https://graph.facebook.com/v21.0/oauth/access_token",
+  "authorizeUrl": "https://www.facebook.com/v25.0/dialog/oauth",
+  "tokenUrl": "https://graph.facebook.com/v25.0/oauth/access_token",
   "scopes": [
     "pages_manage_posts",
-    "pages_read_engagement"
+    "pages_read_engagement",
+    "pages_show_list"
   ],
   "accessTokenCredential": "pageAccessToken",
   "refreshTokenCredential": null,

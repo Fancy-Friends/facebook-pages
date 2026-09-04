@@ -28,13 +28,13 @@
 
   "oauth": {
     "flow": "authorization_code",
-    "authorizeUrl": "https://www.facebook.com/v21.0/dialog/oauth",
-    "tokenUrl": "https://graph.facebook.com/v21.0/oauth/access_token",
-    "scopes": ["pages_manage_posts", "pages_read_engagement"],
+    "authorizeUrl": "https://www.facebook.com/v25.0/dialog/oauth",
+    "tokenUrl": "https://graph.facebook.com/v25.0/oauth/access_token",
+    "scopes": ["pages_manage_posts", "pages_read_engagement", "pages_show_list"],
     "accessTokenCredential": "pageAccessToken",
     "refreshTokenCredential": null,
     "accessTokenTtlSeconds": 5184000,
-    "$scopeComment": "pages_manage_posts to publish and pages_read_engagement because Meta requires it alongside -- neither grants reading a user's own feed or their friends. Both are subject to App Review before an app can use them on a page it does not own.",
+    "$scopeComment": "pages_manage_posts to publish, and the TWO permissions Meta lists as its dependencies: pages_read_engagement and pages_show_list. None of the three grants reading a user's own feed or their friends, and all are subject to App Review before an app can use them on a page it does not own. pages_show_list was MISSING until 2026-09-04 -- the permissions reference names it as a dependency of pages_manage_posts, and it is also how a user token is exchanged for the per-page token this connector authorises with, so a grant without it cannot produce the credential the connector needs. Nothing reported that: the scope list is metadata a HOST acts on, so an omission here fails during authorisation on somebody else's machine.",
     "$comment": "The PAGE token, not the user token. A user token is exchanged for a per-page token, which is why pageAccessToken is scoped `account` -- one per connected page -- while appSecret and the client pair are `provider`, one for the whole installation. Getting that backwards would let one page's automation post as another's. Long-lived page tokens last about 60 days, which is what accessTokenTtlSeconds records; there is no refresh token in this flow, so a connection is re-authorised rather than refreshed."
   },
 
@@ -43,9 +43,9 @@
   "sandboxNote": "Facebook has no sandbox for Pages. Anything this publishes appears on a real Page to real followers, and deleting it afterwards does not un-notify them. Point it at a Page you own and have muted before pointing it at anything else.",
 
   "baseUrls": {
-    "live": "https://graph.facebook.com/v21.0"
+    "live": "https://graph.facebook.com/v25.0"
   },
-  "$baseUrlComment": "The API VERSION is a path segment, not a header. Meta supports each version for about two years and then removes it -- an unversioned call silently gets the oldest still-supported version, so pinning it here is the difference between a breaking change we choose and one we discover.",
+  "$baseUrlComment": "The API VERSION is a path segment, not a header. Meta supports each version for about two years and then removes it -- an unversioned call silently gets the oldest still-supported version, so pinning it here is the difference between a breaking change we choose and one we discover. v25.0 (released 2026-02-18, retires 2028-07-29), moved off v21.0 which retires 2027-01-21. NOT v26.0, which is newer and lives a few months longer: v25.0 is what facebook-lead-ads and instagram-business already pin, and three Meta connectors on one version is worth more here than the extra runway -- drift between them is exactly the kind that is invisible until one of them breaks alone. The version appears in THREE places in this file, not one: the base URL, the authorize dialog and the token endpoint. Verified against Meta's v22, v23, v24 and v25 changelogs: no breaking change touches POST /{page-id}/feed, its message/link/published fields, page access tokens, appsecret_proof, or any scope above.",
 
   "encoding": "json",
 
