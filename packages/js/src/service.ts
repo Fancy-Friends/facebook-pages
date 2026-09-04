@@ -40,7 +40,7 @@ import { createHmac } from "node:crypto";
 export const CONNECTOR_API_VERSION = 1;
 
 export const FACEBOOK_PAGES_BASE_URLS = {
-  "live": "https://graph.facebook.com/v21.0"
+  "live": "https://graph.facebook.com/v25.0"
 } as const;
 
 /** Credential keys a remote call cannot proceed without. */

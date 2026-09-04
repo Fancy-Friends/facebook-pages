@@ -48,9 +48,9 @@ A Facebook Pages connection holds 4 values.
 
 Facebook Pages uses OAuth2 (authorization_code). The package DECLARES the exchange; the HOST performs it — a consent screen needs a browser, a redirect URI and somewhere to persist the result, and all three belong to the host.
 
-- **Authorize URL** — https://www.facebook.com/v21.0/dialog/oauth
-- **Token URL** — https://graph.facebook.com/v21.0/oauth/access_token
-- **Scopes** — `pages_manage_posts`, `pages_read_engagement`
+- **Authorize URL** — https://www.facebook.com/v25.0/dialog/oauth
+- **Token URL** — https://graph.facebook.com/v25.0/oauth/access_token
+- **Scopes** — `pages_manage_posts`, `pages_read_engagement`, `pages_show_list`
 - **Access token lifetime** — 5184000 seconds (60 days). A host that never refreshes works all afternoon and is broken by morning.
 
 **This flow issues NO refresh token.** A connection is RE-AUTHORISED rather than refreshed when the access token expires — checked, not assumed.

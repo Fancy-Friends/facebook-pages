@@ -41,7 +41,7 @@ final class FacebookPages
 
     public const SERVICE = 'facebook_pages';
 
-    public const LIVE_URL = 'https://graph.facebook.com/v21.0';
+    public const LIVE_URL = 'https://graph.facebook.com/v25.0';
 
     /** @var list<string> Credential keys a remote call cannot proceed without. */
     public const REQUIRES = [
