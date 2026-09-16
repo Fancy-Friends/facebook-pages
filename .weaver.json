@@ -51,7 +51,7 @@
     "packages/py/src/fancy_facebook_pages/_runtime.py": "6dcba17c07c1e99200784311a3570b7bfcb8e26e1f0720473c3fbcc4ae778cb6",
     "packages/py/src/fancy_facebook_pages/actions/__init__.py": "a0a29f0c8ee1346817f9c01a81a81f2d13399b62490b863ac951c1e6cfb74d3c",
     "packages/py/src/fancy_facebook_pages/actions/post_create.py": "92774bbc0495585cc1a4c43250508502cf3208cf52829e46a867fbb0799c2877",
-    "packages/py/src/fancy_facebook_pages/faker.py": "5b53a868b968bbbd70174c9c01debec9f766de5daf7b0e4fd099eb2a1e1bda27",
+    "packages/py/src/fancy_facebook_pages/faker.py": "6b96f3dd674b4119d7a72b9c27c511687bc873de4710e18e0d5e1798ee5aaf9b",
     "packages/py/src/fancy_facebook_pages/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "packages/py/src/fancy_facebook_pages/service.py": "2bf39bebad8ac721cd1849642a91474de95e1e6d2ccb7fdc46fcf4bf9f907df8",
     "packages/py/tests/test_faker.py": "b2503e450552302c674176d5e9bac626156d6fafbcf1cd4c5055b64e19deac04",
