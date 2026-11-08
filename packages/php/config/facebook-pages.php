@@ -20,12 +20,12 @@ return [
 
     'credentials' => [
         // App ID (one per installation).
-        'clientId' => env('FACEBOOK_PAGES_CLIENTID'),
+        'clientId' => env('FACEBOOK_PAGES_CLIENT_ID', env('FACEBOOK_PAGES_CLIENTID')),
         // App secret (OAuth) (one per installation, secret).
-        'clientSecret' => env('FACEBOOK_PAGES_CLIENTSECRET'),
+        'clientSecret' => env('FACEBOOK_PAGES_CLIENT_SECRET', env('FACEBOOK_PAGES_CLIENTSECRET')),
         // App secret (proof) (one per installation, secret).
-        'appSecret' => env('FACEBOOK_PAGES_APPSECRET'),
+        'appSecret' => env('FACEBOOK_PAGES_APP_SECRET', env('FACEBOOK_PAGES_APPSECRET')),
         // Page access token (per connected account, secret).
-        'pageAccessToken' => env('FACEBOOK_PAGES_PAGEACCESSTOKEN'),
+        'pageAccessToken' => env('FACEBOOK_PAGES_PAGE_ACCESS_TOKEN', env('FACEBOOK_PAGES_PAGEACCESSTOKEN')),
     ],
 ];
